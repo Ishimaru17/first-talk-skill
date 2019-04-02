@@ -9,8 +9,8 @@ class FirstTalk(MycroftSkill):
 	def handle_talk_first(self, message):
 		self.speak_dialog('talk.first')
 
-    def stop(self):
-    	pass
+	def stop(self):
+		pass
 
 
 def create_skill():
