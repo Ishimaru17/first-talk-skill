@@ -1,4 +1,4 @@
-from mycroft import MycroftSkill, intent_file_handler
+from mycroft import MycroftSkill, intent_handler
 from adapt.intent import IntentBuilder
 
 class FirstTalk(MycroftSkill):
