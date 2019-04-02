@@ -6,7 +6,7 @@ class FirstTalk(MycroftSkill):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 
 	@intent_file_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
-	def handle_talk_first(self, message):
+	def handle_talk_first__intent(self, message):
 		self.speak_dialog('talk.first')
 
 	def stop(self):
