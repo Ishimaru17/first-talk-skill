@@ -15,7 +15,7 @@ def read_talk(zork):
 	return output
 
 def cmd(talk, action):
-	talk.stdin.write(action.encode() + '\n')
+	talk.stdin.write(action.encode() + b'\n')
 	talk.stdin.flush()
 
 class FirstTalk(MycroftSkill):
