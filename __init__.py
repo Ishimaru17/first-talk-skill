@@ -23,7 +23,7 @@ class FirstTalk(MycroftSkill):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 		self.talk = None
 		self.conversation = False
-		self.data = join(self._dir, 'data.txt')
+		self.data = join(self._dir, 'data.sh')
 
 	@intent_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
 	def handle_talk_first__intent(self, message):
