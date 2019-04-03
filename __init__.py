@@ -8,15 +8,15 @@ import sys
 import os
 
 
-def read_talk(zork):
+def read_talk(conv):
 	output = ""
-	output += zork.stdout.read(1).decode()
+	output += conv.stdout.read(1).decode()
 	output += "____test____"
 	return output
 
 def cmd(talk, action):
 	talk.stdin.write(action.encode() + b'\n')
-	talk.stdin.flush()
+	#talk.stdin.flush()
 
 class FirstTalk(MycroftSkill):
 	def __init__(self):
@@ -35,9 +35,10 @@ class FirstTalk(MycroftSkill):
 
 	def stop_conversation(self):
 		self.playing = False
+		self.speak('Leave')
 		LOG.info('Leave')
 
-	def stop(self):
+	def stop(self, message = None):
 		if self.talk:
 			self.stop_conversation()
 
