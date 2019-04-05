@@ -16,7 +16,7 @@ def read_talk(conv):
 
 def cmd(talk, action):
 	talk.stdin.write(action.encode() + b'\n')
-	#talk.stdin.flush()
+	talk.stdin.flush()
 
 class FirstTalk(MycroftSkill):
 	def __init__(self):
