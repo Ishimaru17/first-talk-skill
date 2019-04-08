@@ -94,7 +94,7 @@ class TalkTest:
 	def talk_to_you(self):
 		talk = self.cmd
 		talkative = is_talk_in(talk, 'Help.voc', 'Help.dialog')
-		if talkative:
+		if talkative is not None:
 			talk = talkative
 		return talk
 
