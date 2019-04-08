@@ -27,6 +27,7 @@ class FirstTalk(MycroftSkill):
 		self.talk = None
 		self.conversation = False
 		self.data = join(self._dir, 'data.sh')
+		LOG.info('TEST!')
 
 	
 	@intent_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
