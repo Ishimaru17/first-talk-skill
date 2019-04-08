@@ -7,6 +7,7 @@ from termios import tcflush, TCIOFLUSH
 import subprocess
 import sys
 import os
+import time
 
 
 def read_talk(conv):
@@ -32,6 +33,7 @@ class FirstTalk(MycroftSkill):
 	def handle_talk_first__intent(self, message):
 		if not self.talk:
 			self.talk = subprocess.Popen([self.data], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+			time.sleep(0.1)
 		cmd(self.talk, 'look')
 		self.speak_dialog('talk.first')
 		self.conversation = True
