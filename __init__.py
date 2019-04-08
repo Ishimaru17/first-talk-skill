@@ -3,7 +3,6 @@ from mycroft.util.log import LOG
 from adapt.intent import IntentBuilder
 from os.path import join, exists
 from termios import tcflush, TCIOFLUSH
-from talktest import *
 
 import subprocess
 import sys
@@ -59,6 +58,18 @@ class FirstTalk(MycroftSkill):
 						return True
 		return False
 
+
+
+class TalkTest:
+	def __init__(self, cmd):
+		self.cmd = cmd
+
+	def talk_to_you(self):
+		if self.cmd == "quit" or self.cmd == "exit":
+			return "Bye human!"
+		else:
+			talk = "I like " + self.cmd
+			return talk
 
 
 
