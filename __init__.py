@@ -26,7 +26,6 @@ class FirstTalk(MycroftSkill):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 		self.talk = None
 		self.conversation = False
-
 	
 	@intent_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
 	def handle_talk_first__intent(self, message):
@@ -35,6 +34,11 @@ class FirstTalk(MycroftSkill):
 			time.sleep(0.1)
 		self.speak_dialog('talk.first')
 		self.conversation = True
+
+	@intent_handler(IntentBuilder("TestMessageIntent").require("Help").build())
+	def handle_test_message__intent(self, message):
+		if self.talk:
+			self.speak_dialog('talk.help')
 
 	def stop_conversation(self):
 		self.conversation = False
