@@ -10,8 +10,8 @@ import os
 import time
 
 #command that activate the response to a speech.
-def cmd(action):
-	test = TalkTest(action)
+def cmd(action, dir):
+	test = TalkTest(action, dir)
 	return test.talk_to_you()
 
 #Class inheritant from MycroftSkill which allow the dialog.
@@ -22,6 +22,7 @@ class FirstTalk(MycroftSkill):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 		self.talk = None
 		self.conversation = False
+		self.path = self._dir
 	
 	#Function calls whenever a line of InitialTalk is said
 	#This function began the conversation between Mycroft and the user.
@@ -59,7 +60,7 @@ class FirstTalk(MycroftSkill):
 					self.stop_conversation()
 					return True
 				else: 
-					the_talk = cmd(utterance)
+					the_talk = cmd(utterance, self.path)
 					self.speak(the_talk)
 					return True
 		return False
@@ -67,16 +68,38 @@ class FirstTalk(MycroftSkill):
 
 #Class of the different talking.
 class TalkTest:
-	def __init__(self, cmd):
+	def __init__(self, cmd, dir):
 		self.cmd = cmd
+		self.dir = dir
+
+	def is_talk_in(self, talk, vocab, response):
+		voc_path = join('vocab/en-us/', vocab)
+		path = join(self.dir, voc_path)
+		file = open(path, 'r')
+		lines = file.readlines()
+		file.close()
+		for line in lines:
+			if talk in line:
+				resp_path = join('dialog/en-us/', response)
+				path_dialog = join(self.dir, resp_path)
+				file = open(path_dialog; 'r')
+				content = file.read()
+				file.close()
+				return content
+			else: 
+				return None
+
 
 	#Act like a parrot. Return the given text.
 	def talk_to_you(self):
 		talk = self.cmd
+		talkative = is_talk_in(talk, 'Help.voc', 'Help.dialog')
+		if talkative:
+			talk = talkative
 		return talk
 
 
-#create the skill and load it in mycroft when it is launch.
+#create the skill and load it in mycroft when it is launch. 
 def create_skill():
 	return FirstTalk()
 
