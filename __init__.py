@@ -16,7 +16,7 @@ def read_talk(conv):
 	output += "____test____"
 	return output
 
-def cmd(talk, action):
+def cmd(action):
 	test = TalkTest(action)
 	return test.talk_to_you()
 
@@ -26,23 +26,19 @@ class FirstTalk(MycroftSkill):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 		self.talk = None
 		self.conversation = False
-		self.data = join(self._dir, 'data.sh')
-		LOG.info('TEST!')
 
 	
 	@intent_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
 	def handle_talk_first__intent(self, message):
 		if not self.talk:
-			self.talk = subprocess.Popen([self.data], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+			self.talk = True
 			time.sleep(0.1)
-		cmd(self.talk, 'look')
 		self.speak_dialog('talk.first')
 		self.conversation = True
 
 	def stop_conversation(self):
-		self.playing = False
+		self.conversation = False
 		self.speak('Leave')
-		LOG.info('Leave')
 
 	def stop(self, message = None):
 		if self.talk:
@@ -52,11 +48,11 @@ class FirstTalk(MycroftSkill):
 		if utterance:
 			utterance = utterance[0]
 			if self.conversation:
-				if "quit" in utterance or utterance == "exit":
+				if "quit" in utterance or "exit" in utterance:
 					self.stop_conversation()
 					return True
 				else: 
-					the_talk = cmd(self.talk, utterance)
+					the_talk = cmd(utterance)
 					self.speak(the_talk)
 					return True
 		return False
