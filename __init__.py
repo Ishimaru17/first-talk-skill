@@ -53,6 +53,7 @@ class FirstTalk(MycroftSkill):
 
 	#As long as this function return true, the conversation is still on
 	def converse(self, utterance, lang):
+
 		if utterance:
 			utterance = utterance[0]
 			if self.conversation:
@@ -73,27 +74,32 @@ class TalkTest:
 		self.dir = dir
 
 	def is_talk_in(self, talk, vocab, response):
+
+		
 		voc_path = join('vocab/en-us/', vocab)
+		LOG.info(voc_path)
 		path = join(self.dir, voc_path)
+		LOG.info(path)
 		file = open(path, 'r')
 		lines = file.readlines()
 		file.close()
 		for line in lines:
-			if talk in line:
+			LOG.info(line)
+			if talk.lower() in line.lower():
 				resp_path = join('dialog/en-us/', response)
 				path_dialog = join(self.dir, resp_path)
 				file = open(path_dialog, 'r')
 				content = file.read()
+				LOG.info(content)
 				file.close()
-				return content
-			else: 
-				return None
+				return content 
+		return None
 
 
 	#Act like a parrot. Return the given text.
 	def talk_to_you(self):
 		talk = self.cmd
-		talkative = is_talk_in(talk, 'Help.voc', 'Help.dialog')
+		talkative = self.is_talk_in(talk, 'Help.voc', 'Help.dialog')
 		if talkative is not None:
 			return talkative
 		return talk
