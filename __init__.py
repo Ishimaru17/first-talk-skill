@@ -9,24 +9,22 @@ import sys
 import os
 import time
 
-
-def read_talk(conv):
-	output = ""
-	output += conv.stdout.read(1).decode()
-	output += "____test____"
-	return output
-
+#command that activate the response to a speech.
 def cmd(action):
 	test = TalkTest(action)
 	return test.talk_to_you()
 
-
+#Class inheritant from MycroftSkill which allow the dialog.
 class FirstTalk(MycroftSkill):
+
+	#Initializqtion thanks to the super constructor.
 	def __init__(self):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 		self.talk = None
 		self.conversation = False
 	
+	#Function calls whenever a line of InitialTalk is said
+	#This function began the conversation between Mycroft and the user.
 	@intent_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
 	def handle_talk_first__intent(self, message):
 		if not self.talk:
@@ -35,19 +33,24 @@ class FirstTalk(MycroftSkill):
 		self.speak_dialog('talk.first')
 		self.conversation = True
 
+	#Function which is call when the user ask for help
+	#TODO allow this function to be call in the conversation
 	@intent_handler(IntentBuilder("TestMessageIntent").require("Help").build())
 	def handle_test_message__intent(self, message):
 		if self.talk:
 			self.speak_dialog('talk.help')
 
+	#Stop the conversation between Mycroft and the user
 	def stop_conversation(self):
 		self.conversation = False
 		self.speak('Leave')
 
+	#If there is a talk, stop it by calling the corresponding function
 	def stop(self, message = None):
 		if self.talk:
 			self.stop_conversation()
 
+	#As long as this function return true, the conversation is still on
 	def converse(self, utterance, lang):
 		if utterance:
 			utterance = utterance[0]
@@ -62,20 +65,18 @@ class FirstTalk(MycroftSkill):
 		return False
 
 
-
+#Class of the different talking.
 class TalkTest:
 	def __init__(self, cmd):
 		self.cmd = cmd
 
+	#Act like a parrot. Return the given text.
 	def talk_to_you(self):
-		if self.cmd == "quit" or self.cmd == "exit":
-			return "Bye human!"
-		else:
-			talk = "I like " + self.cmd
-			return talk
+		talk = self.cmd
+		return talk
 
 
-
+#create the skill and load it in mycroft when it is launch.
 def create_skill():
 	return FirstTalk()
 
