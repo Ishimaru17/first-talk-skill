@@ -15,6 +15,9 @@ def read_talk(conv):
 	output += "____test____"
 	return output
 
+def cmd(talk, action):
+	test = TalkTest(action)
+	return test.talk_to_you()
 
 
 class FirstTalk(MycroftSkill):
@@ -24,10 +27,7 @@ class FirstTalk(MycroftSkill):
 		self.conversation = False
 		self.data = join(self._dir, 'data.sh')
 
-	def cmd(talk, action):
-	test = TalkTest(action)
-	self.speak(test.talk_to_you())
-
+	
 	@intent_handler(IntentBuilder("TalkFirstIntent").require("InitialTalk").build())
 	def handle_talk_first__intent(self, message):
 		if not self.talk:
@@ -53,11 +53,9 @@ class FirstTalk(MycroftSkill):
 					self.stop_conversation()
 					return True
 				else: 
-					cmd(self.talk, utterance)
-					question = read_talk(self.talk)
-					if question != "":
-						self.speak(question)
-						return True
+					the_talk = cmd(self.talk, utterance)
+					self.speak(the_talk)
+					return True
 		return False
 
 
