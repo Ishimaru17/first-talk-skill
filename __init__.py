@@ -2,6 +2,7 @@ from mycroft import MycroftSkill, intent_handler
 from mycroft.util.log import LOG
 from adapt.intent import IntentBuilder
 from os.path import join, exists
+from termios import tcflush, TCIOFLUSH
 
 import subprocess
 import sys
@@ -16,7 +17,7 @@ def read_talk(conv):
 
 def cmd(talk, action):
 	talk.stdin.write(action.encode() + b'\n')
-	talk.stdin.flush()
+	tcflush(talk.stdin, TCIOFLUSH)
 
 class FirstTalk(MycroftSkill):
 	def __init__(self):
@@ -47,12 +48,10 @@ class FirstTalk(MycroftSkill):
 			utterance = utterance[0]
 			if self.conversation:
 				if "quit" in utterance or utterance == "exit":
-					#leave_zork()
 					self.stop_conversation()
 					return True
 				else: 
 					cmd(self.talk, utterance)
-					#zork_read()
 					question = read_talk(self.talk)
 					if question != "":
 						self.speak(question)
