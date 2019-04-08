@@ -3,7 +3,7 @@ from mycroft.util.log import LOG
 from adapt.intent import IntentBuilder
 from os.path import join, exists
 from termios import tcflush, TCIOFLUSH
-from test import *
+from talktest import *
 
 import subprocess
 import sys
@@ -18,6 +18,7 @@ def read_talk(conv):
 
 def cmd(talk, action):
 	test = TalkTest(action)
+	self.speak(test.talk_to_you())
 
 class FirstTalk(MycroftSkill):
 	def __init__(self):
