@@ -48,7 +48,7 @@ class FirstTalk(MycroftSkill):
 		if self.talk:
 			self.stop_conversation()
 
-	def converse(self, utterance):
+	def converse(self, utterance, lang):
 		if utterance:
 			utterance = utterance[0]
 			if self.conversation:
