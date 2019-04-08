@@ -95,7 +95,7 @@ class TalkTest:
 		talk = self.cmd
 		talkative = is_talk_in(talk, 'Help.voc', 'Help.dialog')
 		if talkative is not None:
-			talk = talkative
+			return talkative
 		return talk
 
 
