@@ -17,7 +17,7 @@ def read_talk(conv):
 	return output
 
 def cmd(talk, action):
-	TalkTest(action)
+	test = TalkTest(action)
 
 class FirstTalk(MycroftSkill):
 	def __init__(self):
