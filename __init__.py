@@ -82,7 +82,7 @@ class TalkTest:
 			if talk in line:
 				resp_path = join('dialog/en-us/', response)
 				path_dialog = join(self.dir, resp_path)
-				file = open(path_dialog; 'r')
+				file = open(path_dialog, 'r')
 				content = file.read()
 				file.close()
 				return content
