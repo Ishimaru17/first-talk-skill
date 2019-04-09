@@ -5,6 +5,7 @@ from os.path import join, exists
 from termios import tcflush, TCIOFLUSH
 
 import subprocess
+import re
 import sys
 import os
 import time
@@ -72,27 +73,44 @@ class TalkTest:
 	def __init__(self, cmd, dir):
 		self.cmd = cmd
 		self.dir = dir
+		self.data_path = join(self.dir, 'name.txt')
 
-	def is_talk_in(self, talk, vocab, response):
-
-		
+	def is_in(self, vocab, talk):
 		voc_path = join('vocab/en-us/', vocab)
-		LOG.info(voc_path)
 		path = join(self.dir, voc_path)
-		LOG.info(path)
 		file = open(path, 'r')
 		lines = file.readlines()
 		file.close()
 		for line in lines:
-			LOG.info(line)
 			if talk.lower() in line.lower():
-				resp_path = join('dialog/en-us/', response)
-				path_dialog = join(self.dir, resp_path)
-				file = open(path_dialog, 'r')
-				content = file.read()
-				LOG.info(content)
-				file.close()
-				return content 
+				return line
+		return None
+
+	def is_talk_in(self, talk, vocab, response):
+		if self.is_in(vocab, talk) is not None:
+			resp_path = join('dialog/en-us/', response)
+			path_dialog = join(self.dir, resp_path)
+			file = open(path_dialog, 'r')
+			content = file.read()
+			file.close()
+			return content 
+		return None
+
+	def save_name(self, vocab, talk):
+		name_line = self.is_in(vocab, talk)
+		if name_line is not None:
+			result = re.split(name_line.lower(), talk.lower())
+			name = re.split('\W+', result[1])
+			file = open(self.data_path, 'w+')
+			file.write(name.capitalize())
+			file.close()
+
+	def get_name(self):
+		if os.path.exists(self.data_path):
+			file = open(self.data_path, 'r')
+			name = file.read()
+			file.close()
+			return name
 		return None
 
 
@@ -100,8 +118,11 @@ class TalkTest:
 	def talk_to_you(self):
 		talk = self.cmd
 		talkative = self.is_talk_in(talk, 'Help.voc', 'Help.dialog')
+		is_name = self.save_name('Name.voc', talk)
 		if talkative is not None:
 			return talkative
+		if self.get_name() is not None:
+			talk += self.get_name()
 		return talk
 
 
