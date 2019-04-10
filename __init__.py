@@ -82,7 +82,7 @@ class TalkTest:
 		lines = file.readlines()
 		file.close()
 		for line in lines:
-			if talk.lower() in line.lower():
+			if line.lower() in talk.lower():
 				return line
 		return None
 
@@ -118,7 +118,7 @@ class TalkTest:
 	def talk_to_you(self):
 		talk = self.cmd
 		talkative = self.is_talk_in(talk, 'Help.voc', 'Help.dialog')
-		is_name = self.save_name('Name.voc', talk)
+		self.save_name('Name.voc', talk)
 		if talkative is not None:
 			return talkative
 		if self.get_name() is not None:
