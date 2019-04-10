@@ -98,6 +98,7 @@ class TalkTest:
 
 	def save_name(self, vocab, talk):
 		name_line = self.is_in(vocab, talk)
+		LOG.info("NAME_LINE: " + name_line)
 		if name_line is not None:
 			result = re.split(name_line.lower(), talk.lower())
 			LOG.info("RESULT: " + result)
@@ -121,7 +122,6 @@ class TalkTest:
 		talk = self.cmd
 		talkative = self.is_talk_in(talk, 'Help.voc', 'Help.dialog')
 		self.save_name('Name.voc', talk)
-		LOG.info("FILE SAVE")
 		if talkative is not None:
 			return talkative
 		if self.get_name() is not None:
