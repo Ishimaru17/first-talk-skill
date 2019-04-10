@@ -82,8 +82,10 @@ class TalkTest:
 		lines = file.readlines()
 		file.close()
 		for line in lines:
-			if line.lower() in talk.lower():
-				return line
+			if talk.lower() in line.lower() or line.lower() in talk.lower():
+				LOG.info("Talk is: " + talk)
+				LOG.info("Line is: " + line)
+				return talk
 		return None
 
 	def is_talk_in(self, talk, vocab, response):
@@ -98,7 +100,9 @@ class TalkTest:
 
 	def save_name(self, vocab, talk):
 		name_line = self.is_in(vocab, talk)
+		LOG.info("SAVE_NAME")
 		if name_line is not None:
+			LOG.info("NAME NOT NONE")
 			result = re.split(name_line.lower(), talk.lower())
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
