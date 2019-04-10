@@ -3,12 +3,45 @@ from mycroft.util.log import LOG
 from adapt.intent import IntentBuilder
 from os.path import join, exists
 from termios import tcflush, TCIOFLUSH
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 
+import base64
 import subprocess
 import re
 import sys
 import os
 import time
+
+def generate_key():
+	length = 1024
+	priv_key = RSA.generate(length)
+	pub_key = priv_key.publickey()
+	return priv_key, pub_key
+
+def encryption(message, pub_key):
+	encryptor = PKCS1_OAEP.new(pub_key)
+	cipher_message = encryptor.encrypt(message)
+	encoded_message = base64.b64encode(cipher_message)
+	return encoded_message
+
+def decryption(encoded_message, priv_key):
+	encryptor = PKCS1_OAEP.new(priv_key)
+	cipher_message = base64.b64decode(encoded_message)
+	message = encryptor.decrypt(cipher_message)
+	return message
+
+
+def test():
+	priv_key, pub_key = generate_key()
+	message = b"Elric"
+	encoded = encryption(message, pub_key)
+	print(encoded)
+	decoded = decryption(encoded, priv_key)
+	print(decoded.decode('utf8'))
+
+
+
 
 #command that activate the response to a speech.
 def cmd(action, dir):
@@ -55,6 +88,7 @@ class FirstTalk(MycroftSkill):
 	#As long as this function return true, the conversation is still on
 	def converse(self, utterance, lang):
 		if utterance:
+			test()
 			utterance = utterance[0]
 			if self.conversation:
 				if "quit" in utterance or "exit" in utterance:
@@ -74,7 +108,10 @@ class TalkTest:
 		self.cmd = cmd
 		self.dir = dir
 		self.data_path = join(self.dir, 'name.txt')
+		
 
+	#Test if what is said and what is waited match
+	#Return the line of vocab that is a match
 	def is_in(self, vocab, talk):
 		voc_path = join('vocab/en-us/', vocab)
 		path = join(self.dir, voc_path)
@@ -86,7 +123,9 @@ class TalkTest:
 				return line
 		return None
 
-	def is_talk_in(self, talk, vocab, response):
+	#Test the match of the vocab/what is said
+	#Return the response associated.
+	def response_talk(self, talk, vocab, response):
 		if self.is_in(vocab, talk) is not None:
 			resp_path = join('dialog/en-us/', response)
 			path_dialog = join(self.dir, resp_path)
@@ -96,6 +135,8 @@ class TalkTest:
 			return content 
 		return None
 
+	#Test if what is said match the vocab
+	#If there is a match write the name on a file
 	def save_name(self, talk, vocab):
 		name_line = self.is_in(vocab, talk)
 		if name_line is not None:
@@ -105,6 +146,7 @@ class TalkTest:
 			file.write(name[1].capitalize())
 			file.close()
 
+	#Return the name store in the file or None if it's empty.
 	def get_name(self):
 		if os.path.exists(self.data_path):
 			file = open(self.data_path, 'r')
@@ -114,15 +156,16 @@ class TalkTest:
 		return None
 
 
-	#Act like a parrot. Return the given text.
+	#Return the given text by adding the name is one is found.
+	#Return the help text if asked.
 	def talk_to_you(self):
 		talk = self.cmd
-		talkative = self.is_talk_in(talk, 'Help.voc', 'Help.dialog')
+		talkative = self.response_talk(talk, 'Help.voc', 'Help.dialog')
 		self.save_name(talk, 'Name.voc')
 		if talkative is not None:
 			return talkative
 		if self.get_name() is not None:
-			talk += ", " +self.get_name()
+			talk += ", " + self.get_name()
 		return talk
 
 
