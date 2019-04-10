@@ -18,7 +18,7 @@ def cmd(action, dir):
 #Class inheritant from MycroftSkill which allow the dialog.
 class FirstTalk(MycroftSkill):
 
-	#Initializqtion thanks to the super constructor.
+	#Initialization thanks to the super constructor.
 	def __init__(self):
 		super(FirstTalk, self).__init__(name="FirstTalk")
 		self.talk = None
@@ -54,7 +54,6 @@ class FirstTalk(MycroftSkill):
 
 	#As long as this function return true, the conversation is still on
 	def converse(self, utterance, lang):
-
 		if utterance:
 			utterance = utterance[0]
 			if self.conversation:
@@ -65,6 +64,7 @@ class FirstTalk(MycroftSkill):
 					the_talk = cmd(utterance, self.path)
 					self.speak(the_talk)
 					return True
+				return True
 		return False
 
 
@@ -83,7 +83,7 @@ class TalkTest:
 		file.close()
 		for line in lines:
 			if talk.lower() in line.lower() or line.lower() in talk.lower():
-				return talk
+				return line
 		return None
 
 	def is_talk_in(self, talk, vocab, response):
@@ -96,16 +96,13 @@ class TalkTest:
 			return content 
 		return None
 
-	def save_name(self, vocab, talk):
+	def save_name(self, talk, vocab):
 		name_line = self.is_in(vocab, talk)
-		LOG.info("NAME_LINE: " + name_line)
 		if name_line is not None:
 			result = re.split(name_line.lower(), talk.lower())
-			LOG.info("RESULT: " + result)
 			name = re.split('\W+', result[1])
-			LOG.info("NAME: " + name)
 			file = open(self.data_path, 'w+')
-			file.write(name.capitalize())
+			file.write(name[1].capitalize())
 			file.close()
 
 	def get_name(self):
@@ -121,12 +118,11 @@ class TalkTest:
 	def talk_to_you(self):
 		talk = self.cmd
 		talkative = self.is_talk_in(talk, 'Help.voc', 'Help.dialog')
-		self.save_name('Name.voc', talk)
+		self.save_name(talk, 'Name.voc')
 		if talkative is not None:
 			return talkative
 		if self.get_name() is not None:
-			LOG.info("NAME IS NOT NONE:" + self.get_name())
-			talk += self.get_name()
+			talk += ", " +self.get_name()
 		return talk
 
 
