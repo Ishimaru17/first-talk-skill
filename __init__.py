@@ -1,3 +1,11 @@
+import Crypto
+import base64
+import subprocess
+import re
+import sys
+import os
+import time
+
 from mycroft import MycroftSkill, intent_handler
 from mycroft.util.log import LOG
 from adapt.intent import IntentBuilder
@@ -5,13 +13,6 @@ from os.path import join, exists
 from termios import tcflush, TCIOFLUSH
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-
-import base64
-import subprocess
-import re
-import sys
-import os
-import time
 
 def generate_key():
 	length = 1024
@@ -36,9 +37,9 @@ def test():
 	priv_key, pub_key = generate_key()
 	message = b"Elric"
 	encoded = encryption(message, pub_key)
-	print(encoded)
+	LOG.info(encoded)
 	decoded = decryption(encoded, priv_key)
-	print(decoded.decode('utf8'))
+	LOG.info(decoded.decode('utf8'))
 
 
 
