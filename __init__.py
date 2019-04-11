@@ -31,6 +31,9 @@ def decryption(encoded_message, priv_key):
 	message = encryptor.decrypt(cipher_message)
 	return message
 
+def test():
+	return 'Hello', 'World!'
+
 #command that activate the response to a speech.
 def cmd(action, dir):
 	test = TalkTest(action, dir)
@@ -96,7 +99,10 @@ class TalkTest:
 		self.cmd = cmd
 		self.dir = dir
 		self.data_path = join(self.dir, 'name.txt')
-		self.priv_key, self.pub_key = generate_key()
+		self.test1, self.test2 = test()
+		priv_key, pub_key = generate_key()
+		self.priv_key = priv_key
+		self.pub_key = pub_key
 		
 
 	#Test if what is said and what is waited match
@@ -132,12 +138,11 @@ class TalkTest:
 			result = re.split(name_line.lower(), talk.lower())
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
-			name_to_save = bytes(name[1].capitalize(), 'utf8')
-			LOG.info("Name = " + name_to_save)
-			LOG.info("Pulic key = " + self.pub_key)
+			name_cap = name[1].capitalize()
+			LOG.info(name_cap)
+			name_to_save = bytes(name_cap, 'utf8')
 			encoded_name = encryption(name_to_save, self.pub_key)
-			LOG.info("Encoded name = " + encoded_name)
-			file.write(encoded_name)
+			file.write(str(encoded_name))
 			file.close()
 
 	#Return the name store in the file or None if it's empty.
@@ -146,7 +151,7 @@ class TalkTest:
 			file = open(self.data_path, 'r')
 			name = file.read()
 			file.close()
-			return decryption(name, self.priv_key).decode('utf8')
+			return decryption(name[2:-1], self.priv_key).decode('utf8')
 		return None
 
 
