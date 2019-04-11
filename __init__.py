@@ -36,9 +36,7 @@ def test():
 	priv_key, pub_key = generate_key()
 	message = b"Elric"
 	encoded = encryption(message, pub_key)
-	LOG.info(encoded)
 	decoded = decryption(encoded, priv_key)
-	LOG.info(decoded.decode('utf8'))
 
 
 
@@ -144,7 +142,10 @@ class TalkTest:
 			result = re.split(name_line.lower(), talk.lower())
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
-			encoded_name = encryption(bytes((name[1].capitalize()), 'utf8'), self.pub_key)
+			name_to_save = name[1].capitalize()
+			LOG.info("Name = " + name_to_save)
+			encoded_name = encryption(bytes(name_to_save, 'utf8'), self.pub_key)
+			LOG.info("Encoded name = " + encoded_name)
 			file.write(encoded_name)
 			file.close()
 
