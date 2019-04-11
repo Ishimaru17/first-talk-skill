@@ -108,7 +108,7 @@ class TalkTest:
 		self.cmd = cmd
 		self.dir = dir
 		self.data_path = join(self.dir, 'name.txt')
-		self.priv_key self.pub_key = generate_key()
+		self.priv_key, self.pub_key = generate_key()
 		
 
 	#Test if what is said and what is waited match
