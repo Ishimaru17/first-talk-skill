@@ -145,7 +145,7 @@ class TalkTest:
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
 			encoded_name = encryption(bytes((name[1].capitalize()), 'utf8'), self.pub_key)
-			file.write()
+			file.write(encoded_name)
 			file.close()
 
 	#Return the name store in the file or None if it's empty.
