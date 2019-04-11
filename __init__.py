@@ -31,16 +31,6 @@ def decryption(encoded_message, priv_key):
 	message = encryptor.decrypt(cipher_message)
 	return message
 
-
-def test():
-	priv_key, pub_key = generate_key()
-	message = b"Elric"
-	encoded = encryption(message, pub_key)
-	decoded = decryption(encoded, priv_key)
-
-
-
-
 #command that activate the response to a speech.
 def cmd(action, dir):
 	test = TalkTest(action, dir)
@@ -142,9 +132,10 @@ class TalkTest:
 			result = re.split(name_line.lower(), talk.lower())
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
-			name_to_save = name[1].capitalize()
+			name_to_save = bytes(name[1].capitalize(), 'utf8')
 			LOG.info("Name = " + name_to_save)
-			encoded_name = encryption(bytes(name_to_save, 'utf8'), self.pub_key)
+			LOG.info("Pulic key = " + self.pub_key)
+			encoded_name = encryption(name_to_save, self.pub_key)
 			LOG.info("Encoded name = " + encoded_name)
 			file.write(encoded_name)
 			file.close()
