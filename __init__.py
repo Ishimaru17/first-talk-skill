@@ -108,6 +108,7 @@ class TalkTest:
 		self.cmd = cmd
 		self.dir = dir
 		self.data_path = join(self.dir, 'name.txt')
+		self.priv_key self.pub_key = generate_key()
 		
 
 	#Test if what is said and what is waited match
@@ -143,7 +144,8 @@ class TalkTest:
 			result = re.split(name_line.lower(), talk.lower())
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
-			file.write(name[1].capitalize())
+			encoded_name = encryption(bytes((name[1].capitalize()), 'utf8'), self.pub_key)
+			file.write()
 			file.close()
 
 	#Return the name store in the file or None if it's empty.
@@ -152,7 +154,7 @@ class TalkTest:
 			file = open(self.data_path, 'r')
 			name = file.read()
 			file.close()
-			return name
+			return decryption(name, self.priv_key).decode('utf8')
 		return None
 
 

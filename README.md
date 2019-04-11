@@ -16,4 +16,10 @@ When Mycroft is wake up with a talk word, then it will repeat what you said exce
 ## Credits
 Campora
 
-
+## Common issues
+- No module named 'Crypto' -> rebuilt the venv environnement
+```bash
+mycroft-core$ sudo rm -R .venv/
+mycroft-core$ ./dev_setup.sh
+```
+[Mycroft Documentation](https://mycroft.ai/documentation/linux/)
