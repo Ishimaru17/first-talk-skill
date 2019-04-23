@@ -13,10 +13,26 @@ from termios import tcflush, TCIOFLUSH
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
-def generate_key():
-	length = 1024
-	priv_key = RSA.generate(length)
-	pub_key = priv_key.publickey()
+def generate_key(dir):
+	pub_path = join(dir, 'publickey.txt')
+	priv_path = join(dir, 'privatekey.txt')
+	if os.path.exists(pub_path):
+		pub_file = open(pub_path, 'r')
+		pub_key = pub_file.read()
+		pub_file.close()
+		priv_file = open(priv_path, 'r')
+		priv_key = priv_file.read()
+		priv_file.close()
+	else: 
+		length = 1024
+		priv_key = RSA.generate(length)
+		pub_key = priv_key.publickey()
+		pub_file = open(pub_path, 'w+')
+		pub_file.write(pub_key)
+		pub_file.close()
+		priv_file = open(priv_path, 'w+')
+		priv_key.write(priv_key)
+		priv_file.close()
 	return priv_key, pub_key
 
 def encryption(message, pub_key):
@@ -30,9 +46,6 @@ def decryption(encoded_message, priv_key):
 	cipher_message = base64.b64decode(encoded_message)
 	message = encryptor.decrypt(cipher_message)
 	return message
-
-def test():
-	return 'Hello', 'World!'
 
 #command that activate the response to a speech.
 def cmd(action, dir):
@@ -79,7 +92,6 @@ class FirstTalk(MycroftSkill):
 	#As long as this function return true, the conversation is still on
 	def converse(self, utterance, lang):
 		if utterance:
-			test()
 			utterance = utterance[0]
 			if self.conversation:
 				if "quit" in utterance or "exit" in utterance:
@@ -99,10 +111,7 @@ class TalkTest:
 		self.cmd = cmd
 		self.dir = dir
 		self.data_path = join(self.dir, 'name.txt')
-		self.test1, self.test2 = test()
-		priv_key, pub_key = generate_key()
-		self.priv_key = priv_key
-		self.pub_key = pub_key
+		
 		
 
 	#Test if what is said and what is waited match
@@ -139,10 +148,10 @@ class TalkTest:
 			name = re.split('\W+', result[1])
 			file = open(self.data_path, 'w+')
 			name_cap = name[1].capitalize()
-			LOG.info(name_cap)
-			name_to_save = bytes(name_cap, 'utf8')
+			"""name_to_save = bytes(name_cap, 'utf8')
 			encoded_name = encryption(name_to_save, self.pub_key)
-			file.write(str(encoded_name))
+			file.write(str(encoded_name))"""
+			file.write(name_cap)
 			file.close()
 
 	#Return the name store in the file or None if it's empty.
@@ -151,7 +160,8 @@ class TalkTest:
 			file = open(self.data_path, 'r')
 			name = file.read()
 			file.close()
-			return decryption(name[2:-1], self.priv_key).decode('utf8')
+			return name
+			"""return decryption(name[2:-1], self.priv_key).decode('utf8')"""
 		return None
 
 
